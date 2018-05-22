@@ -1,8 +1,37 @@
 ﻿
 using System;
+using static System.Int32;
+using static System.String;
 
 namespace CleanCode.DuplicatedCode
 {
+    class Time
+    {
+        public int Hours { get; }
+        public int Minutes { get; }
+
+        public Time(int hours, int minutes)
+        {
+            Hours = hours;
+            Minutes = minutes;
+        }
+
+        public static Time Parse(string str)
+        {
+            int hours;
+            int minutes;
+            if (!IsNullOrWhiteSpace(str) && TryParse(str.Replace(":", ""), out var time))
+            {
+                    hours = time / 100;
+                    minutes = time % 100;
+            }
+            else
+                throw new ArgumentNullException("str");
+
+            return new Time(hours, minutes);
+        }
+    }
+
     class DuplicatedCode
     {
         public void AdmitGuest(string name, string admissionDateTime)
@@ -10,28 +39,11 @@ namespace CleanCode.DuplicatedCode
             // Some logic 
             // ...
 
-            int time;
-            int hours = 0;
-            int minutes = 0;
-            if (!string.IsNullOrWhiteSpace(admissionDateTime))
-            {
-                if (int.TryParse(admissionDateTime.Replace(":", ""), out time))
-                {
-                    hours = time / 100;
-                    minutes = time % 100;
-                }
-                else
-                {
-                    throw new ArgumentException("admissionDateTime");
-                }
-
-            }
-            else
-                throw new ArgumentNullException("admissionDateTime");
+            var time = Time.Parse(admissionDateTime);
 
             // Some more logic 
             // ...
-            if (hours < 10)
+            if (time.Hours < 10)
             {
 
             }
@@ -42,27 +54,12 @@ namespace CleanCode.DuplicatedCode
             // Some logic 
             // ...
 
-            int time;
-            int hours = 0;
-            int minutes = 0;
-            if (!string.IsNullOrWhiteSpace(admissionDateTime))
-            {
-                if (int.TryParse(admissionDateTime.Replace(":", ""), out time))
-                {
-                    hours = time / 100;
-                    minutes = time % 100;
-                }
-                else
-                {
-                    throw new ArgumentException("admissionDateTime");
-                }
-            }
-            else
-                throw new ArgumentNullException("admissionDateTime");
+
+            var time = Time.Parse(admissionDateTime);
 
             // Some more logic 
             // ...
-            if (hours < 10)
+            if (time.Hours < 10)
             {
 
             }
