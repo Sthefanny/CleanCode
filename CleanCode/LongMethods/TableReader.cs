@@ -2,16 +2,20 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
-internal class TableReader
+namespace CleanCode.LongMethods
 {
-    public DataTable GetDataTable()
+    internal class TableReader
     {
-        string strConn = ConfigurationManager.ConnectionStrings["FooFooConnectionString"].ToString();
-        SqlConnection conn = new SqlConnection(strConn);
-        SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM [FooFoo] ORDER BY id ASC", conn);
-        DataSet ds = new DataSet();
-        da.Fill(ds, "FooFoo");
-        DataTable dt = ds.Tables["FooFoo"];
-        return dt;
+        public DataTable GetDataTable(string tableName)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["FooFooConnectionString"].ToString();
+            var connection = new SqlConnection(connectionString);
+            var adapter = new SqlDataAdapter($"SELECT * FROM [{tableName}] ORDER BY id ASC", connection);
+            var dataSet = new DataSet();
+            adapter.Fill(dataSet, "FooFoo");
+            var table = dataSet.Tables["FooFoo"];
+
+            return table;
+        }
     }
 }

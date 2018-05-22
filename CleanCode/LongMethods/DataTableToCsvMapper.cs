@@ -1,24 +1,22 @@
-using System;
-using System.Configuration;
+﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.IO;
 
-namespace FooFoo
+namespace CleanCode.LongMethods
 {
     public class DataTableToCsvMapper
     {
-        public System.IO.MemoryStream Map(DataTable dataTable)
+        public MemoryStream Map(DataTable dataTable)
         {
-            MemoryStream ReturnStream = new MemoryStream();
+            var returnStream = new MemoryStream();
 
-            StreamWriter sw = new StreamWriter(ReturnStream);
+            var sw = new StreamWriter(returnStream);
             WriteColumnNames(dataTable, sw);
             WriteRows(dataTable, sw);
             sw.Flush();
             sw.Close();
 
-            return ReturnStream;
+            return returnStream;
         }
 
         private static void WriteRows(DataTable dt, StreamWriter sw)
@@ -34,13 +32,13 @@ namespace FooFoo
         {
             for (int i = 0; i < dt.Columns.Count; i++)
             {
-                WriteCell(dr, i, sw);
+                WriteCell(dr[i], sw);
 
-                WriteSeperatorIfRequired(dt, i, sw);
+                WriteSeparatorIfRequired(dt, i, sw);
             }
         }
 
-        private static void WriteSeperatorIfRequired(DataTable dt, int i, StreamWriter sw)
+        private static void WriteSeparatorIfRequired(DataTable dt, int i, StreamWriter sw)
         {
             if (i < dt.Columns.Count - 1)
             {
@@ -48,11 +46,11 @@ namespace FooFoo
             }
         }
 
-        private static void WriteCell(DataRow dr, int i, StreamWriter sw)
+        private static void WriteCell(object row, StreamWriter sw)
         {
-            if (!Convert.IsDBNull(dr[i]))
+            if (!Convert.IsDBNull(row))
             {
-                string str = String.Format("\"{0:c}\"", dr[i].ToString()).Replace("\r\n", " ");
+                var str = String.Format("\"{0:c}\"", row).Replace("\r\n", " ");
                 sw.Write(str);
             }
             else
@@ -71,6 +69,7 @@ namespace FooFoo
                     sw.Write(",");
                 }
             }
+
             sw.WriteLine();
         }
     }
